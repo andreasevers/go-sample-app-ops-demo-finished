@@ -19,10 +19,6 @@ spec:
         persistentvolumeclaim:
           claimName: workspace-pvc
       serviceAccountName: build-bot
-      resources:
-      - name: build-image
-        resourceRef:
-          name: buildpacks-app-image
       podTemplate:
         volumes:
         - name: buildpacks-cache
