@@ -1,10 +1,10 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-- ../../base/deployment.yaml
-- ../../base/service.yaml
+  - ../../base/deployment.yaml
+  - ../../base/service.yaml
 namespace: dev
 images:
-- name: andreasevers/go-sample-app # used for Kustomize matching
-  newTag: 1.0.0
+  - name: andreasevers/go-sample-app # used for Kustomize matching
+    newTag: kpack-0.0.1-b5.20200626.165611
 namePrefix: dev-
