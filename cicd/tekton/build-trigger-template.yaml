@@ -4,29 +4,41 @@ metadata:
   name: build-trigger-template
 spec:
   resourcetemplates:
-    - apiVersion: tekton.dev/v1beta1
-      kind: PipelineRun
-      metadata:
-        generateName: build-pipeline-run-
-      spec:
-        pipelineRef:
-          name: build-pipeline
-        workspaces:
-          - name: shared-workspace
-            persistentvolumeclaim:
-              claimName: workspace-pvc
-        params:
-          - name: image
-            value: $(params.IMAGE)
-          - name: repo-url
-            value: $(params.REPO_URL)
-          - name: revision
-            value: $(params.REVISION)
-        serviceAccountName: build-bot
+  - apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      generateName: build-pipeline-run-
+    spec:
+      pipelineRef:
+        name: build-pipeline
+      workspaces:
+      - name: shared-workspace
+        persistentvolumeclaim:
+          claimName: workspace-pvc
+      - name: shared-ops-workspace
+        persistentvolumeclaim:
+          claimName: workspace-pvc
+      serviceAccountName: build-bot
+      resources:
+      - name: build-image
+        resourceRef:
+          name: buildpacks-app-image
+      podTemplate:
+        volumes:
+        - name: buildpacks-cache
+          persistentVolumeClaim:
+            claimName: buildpacks-cache-pvc
+      params:
+      - name: repo-url
+        value: $(params.REPO_URL)
+      - name: revision
+        value: $(params.REVISION)
+      - name: github-token-secret
+        value: github-token
+      - name: github-token-secret-key
+        value: GITHUB_TOKEN
   params:
-    - name: REPO_URL
-      description: The Git repository url to build and deploy.
-    - name: REVISION
-      description: The Git revision to build and deploy.
-    - name: IMAGE
-      description: Name and tag of the Docker container in the Deployment.
+  - name: REPO_URL
+    description: The Git repository url to build and deploy.
+  - name: REVISION
+    description: The Git revision to build and deploy.

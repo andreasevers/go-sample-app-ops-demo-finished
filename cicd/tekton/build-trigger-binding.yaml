@@ -8,5 +8,3 @@ spec:
     value: $(body.repository.clone_url)
   - name: REVISION
     value: $(body.head_commit.id)
-  - name: IMAGE
-    value: andreasevers/go-sample-app:$(body.head_commit.id)
